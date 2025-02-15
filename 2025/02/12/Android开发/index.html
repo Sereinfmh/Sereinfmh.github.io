@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Android开发：记事本 | 这是fmh的博客</title><meta name="author" content="fmh"><meta name="copyright" content="fmh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用Android Studio开发一个记事本，有注册、登录、添加、修改、删除、查询等核心功能模块。主要运用Kotlin、XML进行Android界面开发，采用SQLite数据库存储本地数据存储。 注册用户在注册页面输入用户名、密码和确认密码，点击注册按钮后，程序会对输入信息进行验证，若验证通过则将用户信息保存到 SharedPreferences 中，并跳转到登录页面。  Android 布局技">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android开发：记事本">
+<meta property="og:url" content="http://example.com/2025/02/12/Android%E5%BC%80%E5%8F%91/index.html">
+<meta property="og:site_name" content="这是fmh的博客">
+<meta property="og:description" content="使用Android Studio开发一个记事本，有注册、登录、添加、修改、删除、查询等核心功能模块。主要运用Kotlin、XML进行Android界面开发，采用SQLite数据库存储本地数据存储。 注册用户在注册页面输入用户名、密码和确认密码，点击注册按钮后，程序会对输入信息进行验证，若验证通过则将用户信息保存到 SharedPreferences 中，并跳转到登录页面。  Android 布局技">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/one.jpg">
+<meta property="article:published_time" content="2025-02-12T09:15:03.000Z">
+<meta property="article:modified_time" content="2025-02-15T14:53:56.509Z">
+<meta property="article:author" content="fmh">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/one.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Android开发：记事本",
+  "url": "http://example.com/2025/02/12/Android%E5%BC%80%E5%8F%91/",
+  "image": "http://example.com/images/one.jpg",
+  "datePublished": "2025-02-12T09:15:03.000Z",
+  "dateModified": "2025-02-15T14:53:56.509Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "fmh",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon.jpg"><link rel="canonical" href="http://example.com/2025/02/12/Android%E5%BC%80%E5%8F%91/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Android开发：记事本',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/images/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/butterfly-icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/one.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">这是fmh的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">Android开发：记事本</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Android开发：记事本</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-12T09:15:03.000Z" title="发表于 2025-02-12 17:15:03">2025-02-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-15T14:53:56.509Z" title="更新于 2025-02-15 22:53:56">2025-02-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>使用Android Studio开发一个记事本，有注册、登录、添加、修改、删除、查询等核心功能模块。主要运用Kotlin、XML进行Android界面开发，采用SQLite数据库存储本地数据存储。</p>
+<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p>用户在注册页面输入用户名、密码和确认密码，点击注册按钮后，程序会对输入信息进行验证，若验证通过则将用户信息保存到 SharedPreferences 中，并跳转到登录页面。</p>
+<ol>
+<li>Android 布局技术<br>LinearLayout 布局管理：在 register.xml 中，主要使用了 LinearLayout 进行布局。最外层的 LinearLayout 的 android:orientation&#x3D;”vertical”，这意味着其子视图会按照垂直方向依次排列，为整个注册页面提供了基础的布局框架。内部嵌套的 LinearLayout 用于将标题 “注册” 文本居中显示，通过设置 android:gravity&#x3D;”center” 实现。<br>视图控件的使用<br>TextView：用于显示静态文本，在注册页面中用于显示 “注册” 标题，可通过设置 android:textSize、android:textStyle 和 android:textColor 等属性来调整文本的样式。<br>EditText：提供了用户输入功能。分别创建了用于输入用户名、密码和确认密码的输入框，通过 android:id 为每个输入框设置唯一标识符，方便在 Java 代码中引用。android:inputType 属性指定了输入类型，如 text 用于用户名输入，textPassword 用于密码输入，保证密码输入时显示为密文。android:hint 属性为输入框提供提示信息，引导用户输入。<br>Button：创建了 “注册” 按钮，通过 android:text 属性设置按钮上显示的文本，android:id 用于在 Java 代码中监听按钮的点击事件。</li>
+<li>Android 事件处理技术<br>OnClickListener 监听器：在 RegisterActivity 的 onCreate 方法中，为注册按钮 btnRegister 设置了 OnClickListener 监听器。当用户点击注册按钮时，会触发 onClick 方法，进而调用 register 方法执行注册逻辑。</li>
+<li>Android 数据存储技术<br>SharedPreferences：在 register 方法中，使用 SharedPreferences 来存储用户的注册信息（用户名和密码）。SharedPreferences 是 Android 提供的一种轻量级的数据存储方式，适合存储简单的键值对数据。<br>getSharedPreferences(“login_info”, MODE_PRIVATE) 用于获取名为 login_info 的 SharedPreferences 对象，MODE_PRIVATE 表示该数据只能被当前应用访问。<br>SharedPreferences.Editor 用于对 SharedPreferences 中的数据进行编辑操作，通过 putString 方法将用户名和密码存储到 SharedPreferences 中。<br>editor.apply() 用于异步提交编辑操作，将数据保存到磁盘。</li>
+<li>Android 提示信息技术<br>Toast 提示：在注册过程中，使用 Toast 类来显示提示信息给用户。当用户名、密码或确认密码为空时，显示 “用户名、密码和确认密码都不能为空”；当密码和确认密码不一致时，显示 “密码和确认密码不一致”；当注册成功时，显示 “注册成功”。<br>makeText 方法用于创建一个 Toast 对象，第一个参数是上下文，第二个参数是要显示的提示信息，第三个参数是提示信息显示的时长（Toast.LENGTH_SHORT 表示短时长），最后调用 show 方法将提示信息显示出来。</li>
+<li>Android 界面跳转技术<br>Intent 跳转：当用户注册成功后，使用 Intent 实现从 RegisterActivity 跳转到 LoginActivity。Intent 是 Android 中用于在不同组件（如活动、服务等）之间进行通信和跳转的重要机制。<br>创建一个 Intent 对象，第一个参数是当前活动的上下文，第二个参数是要跳转的目标活动类。然后调用 startActivity 方法启动目标活动。</li>
+<li>输入验证技术<br>在 register 方法中，对用户输入的信息进行了验证。首先检查用户名、密码和确认密码是否为空，如果为空则通过 Toast 提示用户并返回，不进行后续操作。接着检查密码和确认密码是否一致，如果不一致同样通过 Toast 提示用户并返回。只有当所有验证都通过时，才会执行注册成功的操作。</li>
+</ol>
+<p><img src="/images/regis.png" alt="图片" title="注册"></p>
+<h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><ol>
+<li>Android 布局技术<br>LinearLayout 布局：在 login.xml 中使用了 LinearLayout 进行界面布局。通过设置 android:orientation&#x3D;”vertical”，实现了界面元素的垂直排列。这样可以方便地将登录标题、用户名输入框、密码输入框和登录按钮依次排列在界面上。<br>嵌套的 LinearLayout 用于将登录标题文本居中显示，通过设置 android:gravity&#x3D;”center” 实现。<br>EditText 控件：使用 EditText 控件创建用户名和密码输入框。通过 android:id 为输入框设置唯一标识符，方便在 Java 代码中引用。例如 android:id&#x3D;”@+id&#x2F;etUsername” 和 android:id&#x3D;”@+id&#x2F;etPassword”。<br>android:inputType 属性用于指定输入框的输入类型，如 text 用于用户名输入，textPassword 用于密码输入，保证密码输入时显示为密文。<br>android:hint属性为输入框提供提示信息，帮助用户了解需要输入的内容。<br>Button 控件：使用 Button 控件创建登录按钮，通过 android:text 属性设置按钮上显示的文本为 “登录”。同样通过 android:id 为按钮设置唯一标识符，以便在 Java 代码中监听按钮的点击事件。</li>
+<li>Android 事件处理技术<br>OnClickListener 监听器：在 LoginActivity 的 onCreate 方法中，为登录按钮 btnLogin 设置了 OnClickListener 监听器。当用户点击登录按钮时，会触发 onClick 方法，进而调用 login 方法执行登录逻辑。</li>
+<li>Android 数据存储与读取技术<br>SharedPreferences：在 login 方法中，使用 SharedPreferences 来读取之前注册时保存的用户名和密码信息。SharedPreferences 是 Android 提供的一种轻量级的数据存储方式，适合存储简单的键值对数据，如用户的登录信息。</li>
+<li>Android 提示信息技术<br>Toast 提示：在登录过程中，使用 Toast 类来显示提示信息给用户。例如，当用户名或密码为空时，显示 “用户名和密码不能为空”；当用户名或密码错误时，显示 “用户名或密码错误”；当登录成功时，显示 “登录成功”。</li>
+<li>Android 界面跳转技术<br>Intent 跳转：当用户登录成功后，使用 Intent 实现从 LoginActivity 跳转到 MainActivity。Intent 是 Android 中用于在不同组件（如活动、服务等）之间进行通信和跳转的重要机制。创建一个 Intent 对象，第一个参数是当前活动的上下文，第二个参数是要跳转的目标活动类。然后调用 startActivity 方法启动目标活动。</li>
+</ol>
+<p><img src="/images/log.png" alt="图片" title="登录"></p>
+<h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3><ol>
+<li>Android 布局与视图绑定<br>布局文件加载：<br>在 onCreate 方法中，通过 setContentView(R.layout.activity_notepad) 加载了名为 activity_notepad 的布局文件，以此来定义主页面的 UI 结构。<br>视图控件查找：<br>使用 findViewById 方法来查找布局文件中的视图控件。例如，listView &#x3D; (ListView) findViewById(R.id.listview) 找到了 ListView 控件，用于展示便签列表；ImageView add &#x3D; (ImageView) findViewById(R.id.add) 找到了添加便签的图标按钮。</li>
+<li>事件处理机制<br>点击事件处理：<br>为添加便签的图标按钮设置了点击事件监听器。当用户点击该按钮时，会创建一个 Intent 对象，用于启动 EditNoteActivity 活动，并且使用 startActivityForResult 方法启动该活动，以便在返回结果时能进行相应处理。<br>列表项点击事件处理：<br>为 ListView 的列表项设置了点击事件监听器。当用户点击某一便签项时，会获取该便签的信息（如 id、time、content），并将这些信息通过 Intent 传递给 EditNoteActivity 活动，同时启动该活动。<br>列表项长按事件处理：<br>为 ListView 的列表项设置了长按事件监听器。当用户长按某一便签项时，会弹出一个 AlertDialog 对话框，询问用户是否删除该便签。如果用户点击 “确定”，则调用数据库的 deleteData 方法删除该便签数据，同时从列表中移除该便签项，并通知适配器数据发生了变化，最后显示删除成功的提示信息；如果用户点击 “取消”，则关闭对话框。</li>
+<li>数据库操作技术<br>数据库创建与使用：<br>在 initData 方法中，创建了 NoteDatabase 数据库的实例，用于进行便签数据的存储和管理。<br>数据查询：<br>showQueryData 方法从数据库中查询所有便签数据，并将查询结果存储在 list 列表中。然后创建一个 NotepadAdapter 适配器，将数据与 ListView 进行绑定，从而在界面上展示便签列表。<br>数据删除：<br>当用户在 ListView 中长按某一便签项并确认删除时，调用 database.deleteData(note.getId()) 方法从数据库中删除该便签数据。</li>
+<li>活动结果处理技术<br>onActivityResult 方法：<br>重写了 onActivityResult 方法，用于处理从 EditNoteActivity 返回的结果。当 requestCode 为 1 且 resultCode 为 2 时，说明在 EditNoteActivity 中进行了数据的添加或修改操作，此时调用 showQueryData 方法重新查询数据库并更新 ListView 中的数据。</li>
+<li>数据适配技术<br>适配器使用：<br>使用 NotepadAdapter 适配器将 Note 数据列表与 ListView 进行绑定。适配器负责将数据转换为 ListView 可以显示的视图，从而实现便签数据的展示。</li>
+<li>提示信息显示技术<br>Toast 提示：<br>在删除便签成功后，使用 Toast.makeText(MainActivity.this, “删除成功”, Toast.LENGTH_SHORT).show() 方法显示一个短暂的提示信息，告知用户操作结果。</li>
+<li>对话框显示技术<br>AlertDialog 使用：<br>在用户长按便签项时，使用 AlertDialog 对话框询问用户是否删除该便签。通过 AlertDialog.Builder 构建对话框，设置提示信息、“确定” 和 “取消” 按钮及其点击事件，最后创建并显示对话框。</li>
+</ol>
+<p><img src="/images/main.png" alt="图片" title="主页面"></p>
+<h3 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h3><p><img src="/images/add.png" alt="图片" title="添加"></p>
+<h3 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h3><p><img src="/images/modify.png" alt="图片" title="修改"></p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p><img src="/images/delete.png" alt="图片" title="删除"></p>
+<h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><p><img src="/images/select.png" alt="图片" title="查询"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">fmh</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/02/12/Android%E5%BC%80%E5%8F%91/">http://example.com/2025/02/12/Android%E5%BC%80%E5%8F%91/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">这是fmh的博客</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/images/one.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/05/17/python%E7%88%AC%E8%99%AB/" title="python爬取电影评论可视化分析"><img class="cover" src="/images/two.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">python爬取电影评论可视化分析</div></div><div class="info-2"><div class="info-item-1">采集爬取数据通过输入电影名称，利用豆瓣电影搜索接口获取电影ID，根据该电影ID爬取该电影的评论数据，并将评论数据保存到excel文件中。 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071import requestsfrom bs4 import BeautifulSoupimport openpyxl# 获取要查找的电影的iddef get_movie_id(movie_name, headers):    search_url = f&quot;https://movie.douban.com/j/subject_suggest?q=&#123;movie_name&#125;&quot;    response = requests.get(search_url, headers=headers)    data = response.json()   ...</div></div></div></a><a class="pagination-related" href="/2025/02/12/%E7%BD%91%E9%A1%B5%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95/" title="网页制作：HTML+CSS+JavaScript制作注册和登录页面"><img class="cover" src="/images/two.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">网页制作：HTML+CSS+JavaScript制作注册和登录页面</div></div><div class="info-2"><div class="info-item-1">利用HTML、CSS和JavaScript技术制作注册和登录页面，HTML创建出网页结构，CSS美化网页，控制页面元素的外观和布局，JavaScript为网页添加了交互性和动态功能。最终实现注册页面跳转至登录页面。 注册页面： 网页代码：123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;    &lt;title&gt;注册页面&lt;/title&gt;    &lt;style&gt;        body &#123;            display: flex;            justify-content: center;    ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/butterfly-icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">fmh</div><div class="author-info-description">岁岁常欢愉，万事皆胜意</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Sereinfmh" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:3208078587@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C"><span class="toc-number">1.</span> <span class="toc-text">注册</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BB%E5%BD%95"><span class="toc-number">2.</span> <span class="toc-text">登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E9%A1%B5%E9%9D%A2"><span class="toc-number">3.</span> <span class="toc-text">主页面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0"><span class="toc-number">4.</span> <span class="toc-text">添加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9"><span class="toc-number">5.</span> <span class="toc-text">修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">6.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2"><span class="toc-number">7.</span> <span class="toc-text">查询</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/02/12/Android%E5%BC%80%E5%8F%91/" title="Android开发：记事本"><img src="/images/one.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Android开发：记事本"/></a><div class="content"><a class="title" href="/2025/02/12/Android%E5%BC%80%E5%8F%91/" title="Android开发：记事本">Android开发：记事本</a><time datetime="2025-02-12T09:15:03.000Z" title="发表于 2025-02-12 17:15:03">2025-02-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/12/%E7%BD%91%E9%A1%B5%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95/" title="网页制作：HTML+CSS+JavaScript制作注册和登录页面"><img src="/images/two.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网页制作：HTML+CSS+JavaScript制作注册和登录页面"/></a><div class="content"><a class="title" href="/2025/02/12/%E7%BD%91%E9%A1%B5%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95/" title="网页制作：HTML+CSS+JavaScript制作注册和登录页面">网页制作：HTML+CSS+JavaScript制作注册和登录页面</a><time datetime="2025-02-12T09:15:03.000Z" title="发表于 2025-02-12 17:15:03">2025-02-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/12/%E7%BD%91%E9%A1%B5%E5%88%B6%E4%BD%9C/" title="网页制作"><img src="/images/one.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网页制作"/></a><div class="content"><a class="title" href="/2025/02/12/%E7%BD%91%E9%A1%B5%E5%88%B6%E4%BD%9C/" title="网页制作">网页制作</a><time datetime="2025-02-12T09:15:03.000Z" title="发表于 2025-02-12 17:15:03">2025-02-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/17/python%E7%88%AC%E8%99%AB/" title="python爬取电影评论可视化分析"><img src="/images/two.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="python爬取电影评论可视化分析"/></a><div class="content"><a class="title" href="/2024/05/17/python%E7%88%AC%E8%99%AB/" title="python爬取电影评论可视化分析">python爬取电影评论可视化分析</a><time datetime="2024-05-17T12:33:03.000Z" title="发表于 2024-05-17 20:33:03">2024-05-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/04/12/%E7%AE%80%E4%BB%8B/" title="本站简介"><img src="/images/one.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="本站简介"/></a><div class="content"><a class="title" href="/2022/04/12/%E7%AE%80%E4%BB%8B/" title="本站简介">本站简介</a><time datetime="2022-04-12T09:15:03.000Z" title="发表于 2022-04-12 17:15:03">2022-04-12</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/one.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By fmh</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
